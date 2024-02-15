@@ -1,0 +1,85 @@
+import os
+from typing import Union
+
+from src.db_utils.get_db_instance import get_db_instance
+
+from datetime import datetime
+
+
+class ZechemDBUtils:
+
+    def __init__(self):
+        self.db = get_db_instance()
+
+    def get_products(self):
+        try:
+            table_name = os.environ.get("PRODUCTS_TABLE_NAME", "products")
+            return self.db.find(table_name=table_name, query={})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.get_products: {e}")
+            raise e
+
+    def get_product(self, product_id: str):
+        try:
+            table_name = os.environ.get("PRODUCTS_TABLE_NAME", "products")
+            return self.db.find_one(table_name=table_name, query={"id": product_id})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.get_product: {e}")
+            raise e
+
+    def insert_new_product(self, product_data: dict):
+        try:
+            table_name = os.environ.get("PRODUCTS_TABLE_NAME", "products")
+            return self.db.insert_one(table_name=table_name, document=product_data)
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.insert_new_product: {e}")
+            raise e
+
+    def delete_product(self, product_id: str):
+        try:
+            table_name = os.environ.get("PRODUCTS_TABLE_NAME", "products")
+            return self.db.delete_one(table_name=table_name, query={"id": product_id})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.delete_product: {e}")
+            raise e
+
+    def toggle_active(self, product_id: str, active: bool):
+        try:
+            table_name = os.environ.get("PRODUCTS_TABLE_NAME", "products")
+            product_data = {"active": active}  # Constructing the data to update
+            return self.db.update_one(table_name=table_name, query={"id": product_id}, new_data=product_data)
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.toggle_active: {e}")
+            raise e
+
+    def update_product(self, product_id: str, product_data: dict):
+        try:
+            table_name = os.environ.get("PRODUCTS_TABLE_NAME", "products")
+            return self.db.update_one(table_name=table_name, query={"id": product_id}, new_data=product_data)
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.update_product: {e}")
+            raise e
+
+    def get_locations(self):
+        try:
+            table_name = os.environ.get("LOCATIONS_TABLE_NAME", "locations")
+            return self.db.find(table_name=table_name, query={})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.get_locations: {e}")
+            raise e
+
+    def insert_new_location(self, location_data: dict):
+        try:
+            table_name = os.environ.get("LOCATIONS_TABLE_NAME", "locations")
+            return self.db.insert_one(table_name=table_name, document=location_data)
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.insert_new_location: {e}")
+            raise e
+
+    def delete_location(self, location_id: str):
+        try:
+            table_name = os.environ.get("LOCATIONS_TABLE_NAME", "locations")
+            return self.db.delete_one(table_name=table_name, query={"id": location_id})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.delete_location: {e}")
+            raise e
