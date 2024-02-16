@@ -8,6 +8,7 @@ pymongo = "*"
 flask = "*"
 flask-cors = "*"
 boto3 = "*"
+aws-wsgi = "*"
 
 [dev-packages]
 

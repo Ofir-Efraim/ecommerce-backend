@@ -16,8 +16,7 @@ def get_db_secret():
     secret_name = "zechem_atlas_config"
     region_name = "eu-west-1"
 
-    session = boto3.session.Session(profile_name="zechem")
-    client = session.client(
+    client = boto3.client(
         service_name='secretsmanager',
         region_name=region_name
     )

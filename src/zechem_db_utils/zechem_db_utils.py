@@ -1,9 +1,6 @@
 import os
-from typing import Union
 
 from src.db_utils.get_db_instance import get_db_instance
-
-from datetime import datetime
 
 
 class ZechemDBUtils:
@@ -82,4 +79,60 @@ class ZechemDBUtils:
             return self.db.delete_one(table_name=table_name, query={"id": location_id})
         except Exception as e:
             print(f"Error in ZechemDBUtils.delete_location: {e}")
+            raise e
+
+    def get_orders(self):
+        try:
+            table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
+            return self.db.find(table_name=table_name, query={})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.get_orders: {e}")
+            raise e
+
+    def delete_order(self, order_id: str):
+        try:
+            table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
+            return self.db.delete_one(table_name=table_name, query={"id": order_id})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.delete_order: {e}")
+            raise e
+
+    def insert_new_order(self, order_data: dict):
+        try:
+            table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
+            return self.db.insert_one(table_name=table_name, document=order_data)
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.insert_new_order: {e}")
+            raise e
+
+    def get_clients(self):
+        try:
+            table_name = os.environ.get("CLIENTS_TABLE_NAME", "clients")
+            return self.db.find(table_name=table_name, query={})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.get_clients: {e}")
+            raise e
+
+    def delete_client(self, client_id: str):
+        try:
+            table_name = os.environ.get("CLIENTS_TABLE_NAME", "clients")
+            return self.db.delete_one(table_name=table_name, query={"id": client_id})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.delete_client: {e}")
+            raise e
+
+    def get_client(self, phone_number: str):
+        try:
+            table_name = os.environ.get("CLIENTS_TABLE_NAME", "clients")
+            return self.db.find_one(table_name=table_name, query={"phone_number": phone_number})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.get_client: {e}")
+            raise e
+
+    def insert_new_client(self, client_data: dict):
+        try:
+            table_name = os.environ.get("CLIENTS_TABLE_NAME", "clients")
+            return self.db.insert_one(table_name=table_name, document=client_data)
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.insert_new_client: {e}")
             raise e

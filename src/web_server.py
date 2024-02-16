@@ -1,15 +1,19 @@
 import json
-
+import awsgi
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from handlers.products_handler.products import Products
 from handlers.locations_handler.locations import Locations
+from handlers.orders_handler.orders import Orders
+from handlers.clients_handler.clients import Clients
 
 app = Flask(__name__)
 CORS(app)
 
 products_handler = Products()
 locations_handler = Locations()
+orders_handler = Orders()
+clients_handler = Clients()
 
 
 @app.route('/get_products', methods=['GET'])
@@ -142,6 +146,51 @@ def delete_location(location_id):
         return jsonify({'message': f'Location with ID {location_id} deleted successfully'}), 200
     except:
         return jsonify({'error': 'Location not found'}), 404
+
+
+@app.route('/get_orders', methods=['GET'])
+def get_orders():
+    orders = orders_handler.get_orders()
+    return jsonify({'orders': orders}), 200
+
+
+@app.route('/delete_order/<string:order_id>', methods=['DELETE'])
+def delete_order(order_id):
+    try:
+        orders_handler.delete_order(order_id=order_id)
+        return jsonify({'message': f'Order with ID {order_id} deleted successfully'}), 200
+    except:
+        return jsonify({'error': 'Order not found'}), 404
+
+
+@app.route('/submit_order', methods=['POST'])
+def submit_order():
+    data = request.json
+    order = data.get('order')
+    try:
+        orders_handler.add_order(order=order)
+        return jsonify({'message': 'order sent successfully'}), 200
+    except:
+        return jsonify({'error': 'order invalid'}), 400
+
+
+@app.route('/get_clients', methods=['GET'])
+def get_clients():
+    clients = clients_handler.get_clients()
+    return jsonify({'clients': clients}), 200
+
+
+@app.route('/delete_client/<string:client_id>', methods=['DELETE'])
+def delete_client(client_id):
+    try:
+        clients_handler.delete_client(client_id=client_id)
+        return jsonify({'message': f'Client with ID {client_id} deleted successfully'}), 200
+    except:
+        return jsonify({'error': 'Client not found'}), 404
+
+
+def lambda_handler(event, context):
+    return awsgi.response(app, event, context, base64_content_types={"image/png"})
 
 
 if __name__ == '__main__':
