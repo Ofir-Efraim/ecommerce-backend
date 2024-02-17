@@ -1,4 +1,3 @@
-import imghdr
 from urllib.parse import urlparse
 
 import boto3
@@ -13,13 +12,12 @@ class S3Utils:
         bucket_name = 'zechem-products'
         file_name = picture.filename
         file_content = picture.read()
-        content_type = f'image/{imghdr.what(None, file_content)}'
         # Upload file to S3
         response = self.s3_client.put_object(
             Bucket=bucket_name,
             Key=file_name,
             Body=file_content,
-            ContentType=content_type
+            ContentType="binary/octet-stream"
         )
 
         # Generate URL for the uploaded picture
