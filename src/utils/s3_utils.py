@@ -11,13 +11,13 @@ class S3Utils:
         # Upload picture file to S3 bucket
         bucket_name = 'zechem-products'
         file_name = picture.filename
-        file_content = picture.read()
-        # Upload file to S3
-        response = self.s3_client.put_object(
+
+        # Upload file to S3 using upload_fileobj
+        response = self.s3_client.upload_fileobj(
+            Fileobj=picture,
             Bucket=bucket_name,
             Key=file_name,
-            Body=file_content,
-            ContentType=picture.content_type,
+            ExtraArgs={'ContentType': picture.content_type}
         )
 
         # Generate URL for the uploaded picture
