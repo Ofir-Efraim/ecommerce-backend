@@ -196,9 +196,7 @@ def delete_client(client_id):
 
 
 def lambda_handler(event, context):
-    return awsgi.response(app, event, context,
-                          base64_content_types={"image/png", "image/jpeg", "image/gif", "image/bmp", "image/webp",
-                                                "image/tiff", "image/svg+xml", "image/jpg"})
+    return awsgi.response(app, event, context, base64_content_types={"image/png"})
 
 
 if __name__ == '__main__':

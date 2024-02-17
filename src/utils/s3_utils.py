@@ -17,7 +17,7 @@ class S3Utils:
             Bucket=bucket_name,
             Key=file_name,
             Body=file_content,
-            ContentType="binary/octet-stream"
+            ContentType=picture.content_type,
         )
 
         # Generate URL for the uploaded picture
