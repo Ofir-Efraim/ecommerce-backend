@@ -1,5 +1,6 @@
-from urllib.parse import urlparse
 import base64
+from urllib.parse import urlparse
+
 import boto3
 
 
@@ -11,20 +12,13 @@ class S3Utils:
         # Upload picture file to S3 bucket
         bucket_name = 'zechem-products'
         file_name = picture.filename
-
-        # Read the picture content
-        picture_content = picture.read()
-
-        # Encode the picture content in base64
-        base64_content = base64.b64encode(picture_content)
-
-        # Upload base64 encoded content to S3 using put_object
+        file_content = base64.b64decode(picture)
+        # Upload file to S3
         response = self.s3_client.put_object(
-            Body=base64_content,
             Bucket=bucket_name,
             Key=file_name,
+            Body=file_content,
             ContentType=picture.content_type,
-            ContentEncoding='base64'
         )
 
         # Generate URL for the uploaded picture
