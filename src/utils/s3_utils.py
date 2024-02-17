@@ -1,4 +1,5 @@
 import base64
+from io import BytesIO
 from urllib.parse import urlparse
 
 import boto3
@@ -14,12 +15,14 @@ class S3Utils:
         file_name = picture.filename
         file_content = picture.read()
 
+        # Wrap the content in a file-like object
+        file_obj = BytesIO(file_content)
+
         # Upload file to S3
-        response = self.s3_client.put_object(
-            Bucket=bucket_name,
-            Key=file_name,
-            Body=file_content,
-            ContentType=picture.content_type,
+        response = self.s3_client.upload_fileobj(
+            file_obj,
+            bucket_name,
+            file_name
         )
 
         # Generate URL for the uploaded picture
