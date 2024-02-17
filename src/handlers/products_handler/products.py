@@ -1,13 +1,19 @@
-import json
+from uuid import uuid4
+
 from bson import ObjectId
 
 from src.handlers.base_handler import BaseHandler
-from uuid import uuid4
 
 
 class Products(BaseHandler):
     def get_products(self) -> list:
         data = self.db.get_products()
+        products = [{key: str(value) if isinstance(value, ObjectId) else value for key, value in product.items()} for
+                    product in data]
+        return products
+
+    def get_active_products(self) -> list:
+        data = self.db.get_active_products()
         products = [{key: str(value) if isinstance(value, ObjectId) else value for key, value in product.items()} for
                     product in data]
         return products

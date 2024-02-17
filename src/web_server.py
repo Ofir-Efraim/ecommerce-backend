@@ -2,10 +2,10 @@ import json
 import awsgi
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from handlers.products_handler.products import Products
-from handlers.locations_handler.locations import Locations
-from handlers.orders_handler.orders import Orders
-from handlers.clients_handler.clients import Clients
+from src.handlers.products_handler.products import Products
+from src.handlers.locations_handler.locations import Locations
+from src.handlers.orders_handler.orders import Orders
+from src.handlers.clients_handler.clients import Clients
 
 app = Flask(__name__)
 CORS(app)
@@ -19,6 +19,12 @@ clients_handler = Clients()
 @app.route('/get_products', methods=['GET'])
 def get_products():
     products = products_handler.get_products()
+    return jsonify({'products': products}), 200
+
+
+@app.route('/get_active_products', methods=['GET'])
+def get_active_products():
+    products = products_handler.get_active_products()
     return jsonify({'products': products}), 200
 
 
@@ -190,7 +196,9 @@ def delete_client(client_id):
 
 
 def lambda_handler(event, context):
-    return awsgi.response(app, event, context, base64_content_types={"image/png"})
+    return awsgi.response(app, event, context,
+                          base64_content_types={"image/png", "image/jpeg", "image/gif", "image/bmp", "image/webp",
+                                                "image/tiff", "image/svg+xml", "image/jpg"})
 
 
 if __name__ == '__main__':

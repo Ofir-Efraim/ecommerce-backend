@@ -16,6 +16,14 @@ class ZechemDBUtils:
             print(f"Error in ZechemDBUtils.get_products: {e}")
             raise e
 
+    def get_active_products(self):
+        try:
+            table_name = os.environ.get("PRODUCTS_TABLE_NAME", "products")
+            return self.db.find(table_name=table_name, query={"active": True})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.get_products: {e}")
+            raise e
+
     def get_product(self, product_id: str):
         try:
             table_name = os.environ.get("PRODUCTS_TABLE_NAME", "products")
