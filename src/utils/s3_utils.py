@@ -12,7 +12,8 @@ class S3Utils:
         # Upload picture file to S3 bucket
         bucket_name = 'zechem-products'
         file_name = picture.filename
-        file_content = base64.b64decode(picture.read())
+        file_content = picture.read()
+
         # Upload file to S3
         response = self.s3_client.put_object(
             Bucket=bucket_name,
