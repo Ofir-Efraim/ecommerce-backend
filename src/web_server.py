@@ -1,11 +1,13 @@
 import json
 import awsgi
+from botocore.exceptions import ClientError
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from src.handlers.products_handler.products import Products
 from src.handlers.locations_handler.locations import Locations
 from src.handlers.orders_handler.orders import Orders
 from src.handlers.clients_handler.clients import Clients
+from src.utils.email_utils import SuppressionException
 
 app = Flask(__name__)
 CORS(app)
@@ -176,8 +178,10 @@ def submit_order():
     try:
         orders_handler.add_order(order=order)
         return jsonify({'message': 'order sent successfully'}), 200
-    except:
-        return jsonify({'error': 'order invalid'}), 400
+    except SuppressionException as e:
+        return jsonify({'error': "כתובת מייל לא מאושרת"}), 400
+    except ClientError as e:
+        return jsonify({'error': "כתובת מייל לא מורשה, אנא נסה כתובת אחרת"}), 400
 
 
 @app.route('/get_clients', methods=['GET'])

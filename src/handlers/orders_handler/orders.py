@@ -16,6 +16,13 @@ class Orders(BaseHandler):
         self.db.delete_order(order_id=order_id)
 
     def add_order(self, order: dict) -> None:
+        customer_email = order.get('email')
+        if customer_email:
+            order_summary = self.generate_order_summary(order=order, is_client=True)
+            self.email_sender.send_email_notification(customer_email, 'הזמנתך נקלטה בצחם', order_summary)
+        order_summary = self.generate_order_summary(order=order, is_client=False)
+        self.email_sender.send_email_notification('zechem.gf@gmail.com', 'New Order Notification',
+                                                  order_summary)
         order['id'] = str(uuid4())
         self.db.insert_new_order(order_data=order)
 
@@ -31,14 +38,6 @@ class Orders(BaseHandler):
                 "id": str(uuid4())
             }
             self.db.insert_new_client(client_data=new_customer_data)
-        order_summary = self.generate_order_summary(order=order, is_client=False)
-        self.email_sender.send_email_notification('zechem.gf@gmail.com', 'New Order Notification',
-                                                  order_summary)
-
-        customer_email = order.get('email')
-        if customer_email:
-            order_summary = self.generate_order_summary(order=order, is_client=True)
-            self.email_sender.send_email_notification(customer_email, 'הזמנתך נקלטה בצחם', order_summary)
 
     def generate_order_summary(self, order: dict, is_client: bool):
         if not is_client:
