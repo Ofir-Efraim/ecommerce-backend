@@ -19,10 +19,10 @@ class EmailSender:
         # Sender email address
 
         # Check if the email is in the suppression list (SQS queues for bounce or complaint notifications)
-        if self._is_debounced(to_email) or self._is_complained(to_email):
-            print(f"Email {to_email} is suppressed due to debounced or complaint.")
-            self.add_to_ses_suppression_list(email=to_email)
-            raise SuppressionException(f"Email {to_email} is suppressed due to bounce or complaint.")
+        if to_email is not self.sender_email:
+            if self._is_debounced(to_email) or self._is_complained(to_email):
+                print(f"Email {to_email} is suppressed due to debounced or complaint.")
+                self.add_to_ses_suppression_list(email=to_email)
 
         # Create a MIME formatted message
         message = {
@@ -39,6 +39,7 @@ class EmailSender:
                 Destination={'ToAddresses': [to_email]},
                 Message=message
             )
+            print("Email sent! Message ID:", response['MessageId'])
         except:
             raise ClientError(
                 {
@@ -49,9 +50,6 @@ class EmailSender:
                 },
                 operation_name='send_email'
             )
-        else:
-            print("Email sent! Message ID:", response['MessageId'])
-            return True
 
     def _is_debounced(self, email):
         return self._check_queue(self.bounce_queue_url, email)
@@ -73,9 +71,8 @@ class EmailSender:
             if 'Messages' in response:
                 for message in response['Messages']:
                     # Check if the message body contains the email address
-                    if email is not self.sender_email:
-                        if 'Body' in message and email in message['Body']:
-                            return True
+                    if 'Body' in message and email in message['Body']:
+                        return True
             return False
         except Exception as e:
             print("Error checking queue:", e)
