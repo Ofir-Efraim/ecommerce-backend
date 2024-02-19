@@ -13,10 +13,10 @@ class EmailSender:
         self.sqs_client = boto3.client('sqs')
         self.bounce_queue_url = 'https://sqs.eu-west-1.amazonaws.com/851725256428/zechem_email_debounce'
         self.complaint_queue_url = 'https://sqs.eu-west-1.amazonaws.com/851725256428/zechem_email_complaints'
+        self.sender_email = 'zechem.gf@gmail.com'
 
     def send_email_notification(self, to_email, subject, body_html):
         # Sender email address
-        sender_email = 'zechem.gf@gmail.com'
 
         # Check if the email is in the suppression list (SQS queues for bounce or complaint notifications)
         if self._is_debounced(to_email) or self._is_complained(to_email):
@@ -35,7 +35,7 @@ class EmailSender:
         # Send email using the SES client
         try:
             response = self.ses_client.send_email(
-                Source=sender_email,
+                Source=self.sender_email,
                 Destination={'ToAddresses': [to_email]},
                 Message=message
             )
@@ -73,8 +73,9 @@ class EmailSender:
             if 'Messages' in response:
                 for message in response['Messages']:
                     # Check if the message body contains the email address
-                    if 'Body' in message and email in message['Body']:
-                        return True
+                    if email is not self.sender_email:
+                        if 'Body' in message and email in message['Body']:
+                            return True
             return False
         except Exception as e:
             print("Error checking queue:", e)
@@ -95,6 +96,13 @@ class EmailSender:
             )
             print("Email added to SES suppression list:", email)
             return True
-        except ClientError as e:
-            print("Error adding email to SES suppression list:", e)
-            return False
+        except:
+            raise ClientError(
+                {
+                    'Error': {
+                        'Code': '400',
+                        'Message': 'Error adding email to SES suppression list'
+                    }
+                },
+                operation_name='suppression'
+            )
