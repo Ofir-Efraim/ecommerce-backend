@@ -4,7 +4,7 @@ import json
 import boto3
 from botocore.exceptions import ClientError
 import mailtrap as mt
-from s3_utils import S3Utils
+from src.utils.s3_utils import S3Utils
 
 
 class EmailSender:
