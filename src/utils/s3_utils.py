@@ -39,3 +39,13 @@ class S3Utils:
             Key=file_name
         )
         return response
+
+    def download_picture_from_s3(self, bucket_name: str, file_name: str):
+        # Download file from S3 bucket
+        response = self.s3_client.get_object(
+            Bucket=bucket_name,
+            Key=file_name
+        )
+        picture_content = response['Body'].read()
+
+        return picture_content
