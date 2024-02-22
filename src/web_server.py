@@ -7,7 +7,6 @@ from src.handlers.products_handler.products import Products
 from src.handlers.locations_handler.locations import Locations
 from src.handlers.orders_handler.orders import Orders
 from src.handlers.clients_handler.clients import Clients
-from src.utils.email_utils import SuppressionException
 
 app = Flask(__name__)
 CORS(app)
@@ -162,6 +161,12 @@ def get_orders():
     return jsonify({'orders': orders}), 200
 
 
+@app.route('/get_order/<string:order_id>', methods=['GET'])
+def get_order(order_id):
+    order = orders_handler.get_order(order_id=order_id)
+    return jsonify({'order': order}), 200
+
+
 @app.route('/delete_order/<string:order_id>', methods=['DELETE'])
 def delete_order(order_id):
     try:
@@ -176,10 +181,8 @@ def submit_order():
     data = request.json
     order = data.get('order')
     try:
-        orders_handler.add_order(order=order)
-        return jsonify({'message': 'order sent successfully'}), 200
-    except SuppressionException as e:
-        return jsonify({'error': "כתובת מייל לא מאושרת"}), 400
+        order_id = orders_handler.add_order(order=order)
+        return jsonify({'message': 'order sent successfully', "order_id": order_id}), 200
     except ClientError as e:
         return jsonify({'error': "כתובת מייל לא מורשה, אנא נסה כתובת אחרת"}), 400
 

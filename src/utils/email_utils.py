@@ -1,105 +1,59 @@
+import base64
+import json
+
 import boto3
 from botocore.exceptions import ClientError
-
-
-class SuppressionException(Exception):
-    pass
+import mailtrap as mt
 
 
 class EmailSender:
     def __init__(self):
-        # Create an SES client using the session
-        self.ses_client = boto3.client('ses')
-        self.sqs_client = boto3.client('sqs')
-        self.bounce_queue_url = 'https://sqs.eu-west-1.amazonaws.com/851725256428/zechem_email_debounce'
-        self.complaint_queue_url = 'https://sqs.eu-west-1.amazonaws.com/851725256428/zechem_email_complaints'
-        self.sender_email = 'zechem.gf@gmail.com'
+        self.sender_email = 'mailtrap@zechem.net'
 
-    def send_email_notification(self, to_email, subject, body_html):
-        # Sender email address
+    def send_email_notification(self, to_email: str, subject: str, body_html: str):
+        with open("src/assets/logo.jpeg", 'rb') as f:
+            logo_content = f.read()
 
-        # Check if the email is in the suppression list (SQS queues for bounce or complaint notifications)
-        if to_email is not self.sender_email:
-            if self._is_debounced(to_email) or self._is_complained(to_email):
-                print(f"Email {to_email} is suppressed due to debounced or complaint.")
-                self.add_to_ses_suppression_list(email=to_email)
+        mail = mt.Mail(
+            sender=mt.Address(email=self.sender_email, name="Mailtrap"),
+            to=[mt.Address(email=to_email, name="Customer")],
+            subject=subject,
+            html=body_html,
+            category="Zechem",
+            attachments=[
+                mt.Attachment(
+                    content=base64.b64encode(logo_content),
+                    filename="logo.jpeg",
+                    disposition=mt.Disposition.INLINE,
+                    mimetype="image/jpeg",
+                    content_id="logo.jpeg",
+                )
+            ]
+        )
 
-        # Create a MIME formatted message
-        message = {
-            'Subject': {'Data': subject},
-            'Body': {
-                'Html': {'Data': body_html}
-            }
-        }
+        secret = self.get_mailtrap_secret()
+        client = mt.MailtrapClient(token=secret["mailtrap_api_key"])
+        client.send(mail)
 
-        # Send email using the SES client
+    def get_mailtrap_secret(self):
+
+        secret_name = "mailtrap"
+        region_name = "eu-west-1"
+
+        # Create a Secrets Manager client
+        session = boto3.session.Session()
+        client = session.client(
+            service_name='secretsmanager',
+            region_name=region_name
+        )
+
         try:
-            response = self.ses_client.send_email(
-                Source=self.sender_email,
-                Destination={'ToAddresses': [to_email]},
-                Message=message
+            get_secret_value_response = client.get_secret_value(
+                SecretId=secret_name
             )
-            print("Email sent! Message ID:", response['MessageId'])
-        except:
-            raise ClientError(
-                {
-                    'Error': {
-                        'Code': '400',
-                        'Message': 'Invalid email address'
-                    }
-                },
-                operation_name='send_email'
-            )
+        except ClientError as e:
+            raise e
 
-    def _is_debounced(self, email):
-        return self._check_queue(self.bounce_queue_url, email)
+        secret = get_secret_value_response['SecretString']
 
-    def _is_complained(self, email):
-        return self._check_queue(self.complaint_queue_url, email)
-
-    def _check_queue(self, queue_url, email):
-        try:
-            # Receive messages from the SQS queue
-            response = self.sqs_client.receive_message(
-                QueueUrl=queue_url,
-                AttributeNames=['All'],
-                MessageAttributeNames=['All'],
-                MaxNumberOfMessages=10,
-                WaitTimeSeconds=5
-            )
-            # Check if the email address is in the messages
-            if 'Messages' in response:
-                for message in response['Messages']:
-                    # Check if the message body contains the email address
-                    if 'Body' in message and email in message['Body']:
-                        return True
-            return False
-        except Exception as e:
-            print("Error checking queue:", e)
-            return False
-
-    def add_to_ses_suppression_list(self, email):
-        try:
-            response = self.ses_client.create_receipt_rule(
-                RuleSetName='default',  # Use your rule set name
-                Rule={
-                    'Name': 'SuppressionRule',
-                    'Enabled': True,
-                    'TlsPolicy': 'Optional',
-                    'Recipients': [email],
-                    'Actions': [{'AddHeaderAction': {'HeaderName': 'X-SES-Suppression-List',
-                                                     'HeaderValue': 'Bounced or Complaint'}}]
-                }
-            )
-            print("Email added to SES suppression list:", email)
-            return True
-        except:
-            raise ClientError(
-                {
-                    'Error': {
-                        'Code': '400',
-                        'Message': 'Error adding email to SES suppression list'
-                    }
-                },
-                operation_name='suppression'
-            )
+        return json.loads(secret)

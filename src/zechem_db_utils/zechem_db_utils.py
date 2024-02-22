@@ -97,6 +97,14 @@ class ZechemDBUtils:
             print(f"Error in ZechemDBUtils.get_orders: {e}")
             raise e
 
+    def get_order(self, order_id: str):
+        try:
+            table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
+            return self.db.find_one(table_name=table_name, query={"id": order_id})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.get_order: {e}")
+            raise e
+
     def delete_order(self, order_id: str):
         try:
             table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")

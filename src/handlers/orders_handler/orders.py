@@ -12,18 +12,24 @@ class Orders(BaseHandler):
                   order in data]
         return orders
 
+    def get_order(self, order_id: str) -> dict:
+        order = self.db.get_order(order_id=order_id)
+        order['_id'] = str(order['_id'])
+        return order
+
     def delete_order(self, order_id: str) -> None:
         self.db.delete_order(order_id=order_id)
 
-    def add_order(self, order: dict) -> None:
+    def add_order(self, order: dict) -> str:
         customer_email = order.get('email')
         if customer_email:
             order_summary = self.generate_order_summary(order=order, is_client=True)
-            self.email_sender.send_email_notification(customer_email, 'הזמנתך נקלטה בצחם', order_summary)
+            self.email_sender.send_email_notification(customer_email, 'אישור הזמנה צחם', order_summary)
         order_summary = self.generate_order_summary(order=order, is_client=False)
-        self.email_sender.send_email_notification('zechem.gf@gmail.com', 'New Order Notification',
+        self.email_sender.send_email_notification('zechem.gf@gmail.com', 'הזמנה חדשה בצחם',
                                                   order_summary)
-        order['id'] = str(uuid4())
+        order_id = str(uuid4())
+        order['id'] = order_id
         self.db.insert_new_order(order_data=order)
 
         existing_customer = self.db.get_client(phone_number=order['phoneNumber'])
@@ -38,6 +44,7 @@ class Orders(BaseHandler):
                 "id": str(uuid4())
             }
             self.db.insert_new_client(client_data=new_customer_data)
+        return order_id
 
     def generate_order_summary(self, order: dict, is_client: bool):
         if not is_client:
