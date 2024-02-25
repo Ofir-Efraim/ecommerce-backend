@@ -55,7 +55,7 @@ class Orders(BaseHandler):
         # Generate items summary as an unordered list with RTL direction
         items_summary = "<div style='direction: rtl; text-align: right; display:flex; flex-direction:column; gap:5px;'>"
         for item in order['products']:
-            items_summary += f"<span style='direction: rtl; text-align: right;'>{item['name']} כמות - {item['quantity']}</span><br/>"
+            items_summary += f"<p style='direction: rtl; text-align: right;'>{item['name']} כמות - {item['quantity']}</p>"
         items_summary += "</div>"
         logo = base64.b64encode(
             self.s3.download_picture_from_s3(bucket_name='logo-zechem', file_name='logo.jpeg'))
@@ -93,7 +93,7 @@ class Orders(BaseHandler):
         <p style='direction: rtl; text-align: right;'>בברכה,</p>
 
         <p style='direction: rtl; text-align: right;'>צחם-לחם בריאות מצמחים</p>
-        <img src="{logo}" alt='logo'/>
+        <img src={logo} alt='logo'/>
     </body>
     </html>"""
         return order_summary
