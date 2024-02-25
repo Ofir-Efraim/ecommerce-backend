@@ -4,6 +4,7 @@ from uuid import uuid4
 from bson import ObjectId
 
 from src.handlers.base_handler import BaseHandler
+from src.utils.s3_utils import S3Utils
 
 
 class Orders(BaseHandler):
@@ -47,18 +48,19 @@ class Orders(BaseHandler):
             self.db.insert_new_client(client_data=new_customer_data)
         return order_id
 
+    import base64
+
     def generate_order_summary(self, order: dict, is_client: bool):
         if not is_client:
             phone_message = f"<p style='direction: rtl; text-align: right;'>מספר טלפון : {order['phoneNumber']}</p>"
         else:
             phone_message = ""
+
         # Generate items summary as an unordered list with RTL direction
-        items_summary = "<div style='direction: rtl; text-align: right; display:flex; flex-direction:column; gap:5px;'>"
+        items_summary = ""
         for item in order['products']:
             items_summary += f"<p style='direction: rtl; text-align: right;'>{item['name']} כמות - {item['quantity']}</p>"
-        items_summary += "</div>"
-        logo = base64.b64encode(
-            self.s3.download_picture_from_s3(bucket_name='logo-zechem', file_name='logo.jpeg'))
+
         # Determine location message and value
         if 'pickupSpot' in order:
             location_message = "מקום איסוף"
@@ -87,13 +89,13 @@ class Orders(BaseHandler):
         <p style='direction: rtl; text-align: right;'>על סך: {order['totalPrice']} ש"ח</p>
 
         <p style='direction: rtl; text-align: right;'>{location_message}: {location_value}</p>
-        
+
         {phone_message}
-        
+
         <p style='direction: rtl; text-align: right;'>בברכה,</p>
 
         <p style='direction: rtl; text-align: right;'>צחם-לחם בריאות מצמחים</p>
-        <img src={logo} alt='logo'/>
+        <img src='cid:logo' alt='logo'/>
     </body>
     </html>"""
         return order_summary
