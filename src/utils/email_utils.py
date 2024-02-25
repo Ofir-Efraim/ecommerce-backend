@@ -4,32 +4,20 @@ import json
 import boto3
 from botocore.exceptions import ClientError
 import mailtrap as mt
-from src.utils.s3_utils import S3Utils
 
 
 class EmailSender:
     def __init__(self):
         self.sender_email = 'mailtrap@zechem.net'
-        self.s3 = S3Utils()
 
     def send_email_notification(self, to_email: str, subject: str, body_html: str):
 
         mail = mt.Mail(
-            sender=mt.Address(email=self.sender_email, name="Mailtrap"),
+            sender=mt.Address(email=self.sender_email, name="Zechem"),
             to=[mt.Address(email=to_email, name="Customer")],
             subject=subject,
             html=body_html,
             category="Zechem",
-            attachments=[
-                mt.Attachment(
-                    content=base64.b64encode(
-                        self.s3.download_picture_from_s3(bucket_name='logo-zechem', file_name='logo.jpeg')),
-                    filename="logo.jpeg",
-                    disposition=mt.Disposition.INLINE,
-                    mimetype="image/jpeg",
-                    content_id="logo.jpeg",
-                )
-            ]
         )
 
         secret = self.get_mailtrap_secret()
