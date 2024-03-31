@@ -1,15 +1,19 @@
-import base64
 from uuid import uuid4
 
 from bson import ObjectId
 
 from src.handlers.base_handler import BaseHandler
-from src.utils.s3_utils import S3Utils
 
 
 class Orders(BaseHandler):
     def get_orders(self) -> list:
         data = self.db.get_orders()
+        orders = [{key: str(value) if isinstance(value, ObjectId) else value for key, value in order.items()} for
+                  order in data]
+        return orders
+
+    def get_new_orders(self) -> list:
+        data = self.db.get_new_orders()
         orders = [{key: str(value) if isinstance(value, ObjectId) else value for key, value in order.items()} for
                   order in data]
         return orders
@@ -21,6 +25,9 @@ class Orders(BaseHandler):
 
     def delete_order(self, order_id: str) -> None:
         self.db.delete_order(order_id=order_id)
+
+    def mark_order_delivered(self, order_id: str) -> None:
+        self.db.mark_order_delivered(order_id=order_id)
 
     def add_order(self, order: dict) -> str:
         customer_email = order.get('email')
@@ -47,8 +54,6 @@ class Orders(BaseHandler):
             }
             self.db.insert_new_client(client_data=new_customer_data)
         return order_id
-
-    import base64
 
     def generate_order_summary(self, order: dict, is_client: bool):
         if not is_client:

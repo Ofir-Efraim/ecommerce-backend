@@ -161,10 +161,25 @@ def get_orders():
     return jsonify({'orders': orders}), 200
 
 
+@app.route('/get_new_orders', methods=['GET'])
+def get_new_orders():
+    orders = orders_handler.get_new_orders()
+    return jsonify({'orders': orders}), 200
+
+
 @app.route('/get_order/<string:order_id>', methods=['GET'])
 def get_order(order_id):
     order = orders_handler.get_order(order_id=order_id)
     return jsonify({'order': order}), 200
+
+
+@app.route('/mark_order_delivered/<string:order_id>', methods=['POST'])
+def mark_order_delivered(order_id):
+    try:
+        orders_handler.mark_order_delivered(order_id=order_id)
+        return jsonify({'message': f'Order with ID {order_id} marked as delivered'}), 200
+    except:
+        return jsonify({'error': 'Order not found'}), 404
 
 
 @app.route('/delete_order/<string:order_id>', methods=['DELETE'])
