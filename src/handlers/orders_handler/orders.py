@@ -3,24 +3,36 @@ from uuid import uuid4
 from bson import ObjectId
 
 from src.handlers.base_handler import BaseHandler
+from datetime import datetime
 
 
 class Orders(BaseHandler):
     def get_orders(self) -> list:
         data = self.db.get_orders()
-        orders = [{key: str(value) if isinstance(value, ObjectId) else value for key, value in order.items()} for
-                  order in data]
+        orders = []
+        for order in data:
+            # Convert timestamp to desired format
+            order['date'] = datetime.fromtimestamp(float(order['date'])).strftime('%H:%M - %d/%m/%Y')
+            # Convert ObjectId to string
+            order = {key: str(value) if isinstance(value, ObjectId) else value for key, value in order.items()}
+            orders.append(order)
         return orders
 
     def get_new_orders(self) -> list:
         data = self.db.get_new_orders()
-        orders = [{key: str(value) if isinstance(value, ObjectId) else value for key, value in order.items()} for
-                  order in data]
+        orders = []
+        for order in data:
+            # Convert timestamp to desired format
+            order['date'] = datetime.fromtimestamp(float(order['date'])).strftime('%H:%M - %d/%m/%Y')
+            # Convert ObjectId to string
+            order = {key: str(value) if isinstance(value, ObjectId) else value for key, value in order.items()}
+            orders.append(order)
         return orders
 
     def get_order(self, order_id: str) -> dict:
         order = self.db.get_order(order_id=order_id)
         order['_id'] = str(order['_id'])
+        order['date'] = datetime.fromtimestamp(float(order['date'])).strftime('%H:%M - %d/%m/%Y')
         return order
 
     def delete_order(self, order_id: str) -> None:
@@ -39,6 +51,8 @@ class Orders(BaseHandler):
                                                   order_summary)
         order_id = str(uuid4())
         order['id'] = order_id
+        order_date = datetime.now().timestamp()
+        order['date'] = order_date
         self.db.insert_new_order(order_data=order)
 
         existing_customer = self.db.get_client(phone_number=order['phoneNumber'])

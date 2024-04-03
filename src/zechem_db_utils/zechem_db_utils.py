@@ -92,7 +92,7 @@ class ZechemDBUtils:
     def get_orders(self):
         try:
             table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
-            return self.db.find(table_name=table_name, query={})
+            return self.db.find(table_name=table_name, query={}, sort=[("date", -1)])
         except Exception as e:
             print(f"Error in ZechemDBUtils.get_orders: {e}")
             raise e
@@ -100,7 +100,7 @@ class ZechemDBUtils:
     def get_new_orders(self):
         try:
             table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
-            return self.db.find(table_name=table_name, query={"status": "new"})
+            return self.db.find(table_name=table_name, query={"status": "new"}, sort=[("date", -1)])
         except Exception as e:
             print(f"Error in ZechemDBUtils.get_new_orders: {e}")
             raise e
