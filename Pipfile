@@ -9,6 +9,7 @@ flask = "*"
 flask-cors = "*"
 boto3 = "*"
 aws-wsgi = "*"
+pytz = "*"
 
 [dev-packages]
 

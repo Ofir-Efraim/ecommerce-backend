@@ -1,5 +1,6 @@
 from uuid import uuid4
 
+import pytz
 from bson import ObjectId
 
 from src.handlers.base_handler import BaseHandler
@@ -51,7 +52,7 @@ class Orders(BaseHandler):
                                                   order_summary)
         order_id = str(uuid4())
         order['id'] = order_id
-        order_date = datetime.now().timestamp()
+        order_date = datetime.now(pytz.timezone('Asia/Tel_Aviv')).timestamp()
         order['date'] = order_date
         self.db.insert_new_order(order_data=order)
 
