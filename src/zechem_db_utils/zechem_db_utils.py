@@ -118,7 +118,15 @@ class ZechemDBUtils:
             table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
             return self.db.update_one(table_name=table_name, query={"id": order_id}, new_data={"status": "delivered"})
         except Exception as e:
-            print(f"Error in ZechemDBUtils.delete_order: {e}")
+            print(f"Error in ZechemDBUtils.mark_order_delivered: {e}")
+            raise e
+
+    def mark_order_new(self, order_id: str):
+        try:
+            table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
+            return self.db.update_one(table_name=table_name, query={"id": order_id}, new_data={"status": "new"})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.mark_order_new: {e}")
             raise e
 
     def delete_order(self, order_id: str):

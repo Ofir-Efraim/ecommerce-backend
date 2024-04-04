@@ -1,10 +1,10 @@
+from datetime import datetime
 from uuid import uuid4
 
 import pytz
 from bson import ObjectId
 
 from src.handlers.base_handler import BaseHandler
-from datetime import datetime
 
 
 class Orders(BaseHandler):
@@ -44,6 +44,9 @@ class Orders(BaseHandler):
 
     def mark_order_delivered(self, order_id: str) -> None:
         self.db.mark_order_delivered(order_id=order_id)
+
+    def mark_order_new(self, order_id: str) -> None:
+        self.db.mark_order_new(order_id=order_id)
 
     def add_order(self, order: dict) -> str:
         customer_email = order.get('email')

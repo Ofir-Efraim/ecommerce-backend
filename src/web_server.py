@@ -182,6 +182,15 @@ def mark_order_delivered(order_id):
         return jsonify({'error': 'Order not found'}), 404
 
 
+@app.route('/mark_order_new/<string:order_id>', methods=['POST'])
+def mark_order_new(order_id):
+    try:
+        orders_handler.mark_order_new(order_id=order_id)
+        return jsonify({'message': f'Order with ID {order_id} marked as new'}), 200
+    except:
+        return jsonify({'error': 'Order not found'}), 404
+
+
 @app.route('/delete_order/<string:order_id>', methods=['DELETE'])
 def delete_order(order_id):
     try:
