@@ -8,8 +8,10 @@ from src.handlers.base_handler import BaseHandler
 
 
 class Orders(BaseHandler):
-    def get_orders(self) -> list:
-        data = self.db.get_orders()
+    def get_orders(self, page: int, rows_per_page: int) -> [list, int]:
+        skip = (page - 1) * rows_per_page
+        limit = rows_per_page
+        data = self.db.get_orders(skip=skip, limit=limit)
         orders = []
         for order in data:
             # Convert timestamp to desired format
@@ -18,10 +20,13 @@ class Orders(BaseHandler):
             # Convert ObjectId to string
             order = {key: str(value) if isinstance(value, ObjectId) else value for key, value in order.items()}
             orders.append(order)
-        return orders
+        count = self.db.count_orders()
+        return orders, count
 
-    def get_new_orders(self) -> list:
-        data = self.db.get_new_orders()
+    def get_new_orders(self, page: int, rows_per_page: int) -> [list, int]:
+        skip = (page - 1) * rows_per_page
+        limit = rows_per_page
+        data = self.db.get_new_orders(skip=skip, limit=limit)
         orders = []
         for order in data:
             # Convert timestamp to desired format
@@ -30,7 +35,8 @@ class Orders(BaseHandler):
             # Convert ObjectId to string
             order = {key: str(value) if isinstance(value, ObjectId) else value for key, value in order.items()}
             orders.append(order)
-        return orders
+        count = self.db.count_new_orders()
+        return orders, count
 
     def get_order(self, order_id: str) -> dict:
         order = self.db.get_order(order_id=order_id)
@@ -47,6 +53,12 @@ class Orders(BaseHandler):
 
     def mark_order_new(self, order_id: str) -> None:
         self.db.mark_order_new(order_id=order_id)
+
+    def mark_order_paid(self, order_id: str) -> None:
+        self.db.mark_order_paid(order_id=order_id)
+
+    def mark_order_unpaid(self, order_id: str) -> None:
+        self.db.mark_order_unpaid(order_id=order_id)
 
     def add_order(self, order: dict) -> str:
         customer_email = order.get('email')

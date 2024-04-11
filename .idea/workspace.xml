@@ -4,8 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cffc64cf-3cbf-4ee4-b890-a1e6aa18361b" name="Changes" comment="">
+    <list default="true" id="cffc64cf-3cbf-4ee4-b890-a1e6aa18361b" name="Changes" comment="add mark order new in case of user mistake">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/zechem_backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/zechem_backend.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pipfile" beforeDir="false" afterPath="$PROJECT_DIR$/Pipfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pipfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Pipfile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/db_utils/mongo_db_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/db_utils/mongo_db_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/handlers/clients_handler/clients.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/handlers/clients_handler/clients.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/handlers/orders_handler/orders.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/handlers/orders_handler/orders.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/web_server.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/web_server.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/zechem_db_utils/zechem_db_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/zechem_db_utils/zechem_db_utils.py" afterDir="false" />
@@ -34,15 +40,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.web_server.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;app.teamhub.trackedBranches&quot;: &quot;&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.web_server.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "app.teamhub.trackedBranches": "",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/ofir/PycharmProjects/ecommerce-backend",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ofire\PycharmProjects\zechem_backend\src\zechem_db_utils" />
@@ -78,7 +86,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-5a2391486177-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.13763.11" />
+        <option value="bundled-python-sdk-50da183f06c8-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.13135.95" />
       </set>
     </attachedChunks>
   </component>
@@ -91,6 +99,28 @@
       <option name="presentableId" value="Default" />
       <updated>1707978092890</updated>
     </task>
+    <task id="LOCAL-00001" summary="sort orders by date, add date to order and to get orders response">
+      <option name="closed" value="true" />
+      <created>1712127036669</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1712127036669</updated>
+    </task>
+    <task id="LOCAL-00002" summary="add mark order new in case of user mistake">
+      <option name="closed" value="true" />
+      <created>1712210443938</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1712210443938</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="sort orders by date, add date to order and to get orders response" />
+    <MESSAGE value="add mark order new in case of user mistake" />
+    <option name="LAST_COMMIT_MESSAGE" value="add mark order new in case of user mistake" />
   </component>
 </project>

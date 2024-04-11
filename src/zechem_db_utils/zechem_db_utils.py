@@ -89,20 +89,37 @@ class ZechemDBUtils:
             print(f"Error in ZechemDBUtils.delete_location: {e}")
             raise e
 
-    def get_orders(self):
+    def get_orders(self, skip: int, limit: int):
         try:
             table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
-            return self.db.find(table_name=table_name, query={}, sort=[("date", -1)])
+            return self.db.find(table_name=table_name, query={}, sort=[("date", -1)], skip=skip, limit=limit)
         except Exception as e:
             print(f"Error in ZechemDBUtils.get_orders: {e}")
             raise e
 
-    def get_new_orders(self):
+    def count_orders(self):
         try:
             table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
-            return self.db.find(table_name=table_name, query={"status": "new"}, sort=[("date", -1)])
+            return self.db.count_documents(table_name=table_name, query={})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.count_orders: {e}")
+            raise e
+
+    def get_new_orders(self, skip: int, limit: int):
+        try:
+            table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
+            return self.db.find(table_name=table_name, query={"status": "new"}, sort=[("date", -1)], skip=skip,
+                                limit=limit)
         except Exception as e:
             print(f"Error in ZechemDBUtils.get_new_orders: {e}")
+            raise e
+
+    def count_new_orders(self):
+        try:
+            table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
+            return self.db.count_documents(table_name=table_name, query={"status": "new"})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.count_new_orders: {e}")
             raise e
 
     def get_order(self, order_id: str):
@@ -129,6 +146,22 @@ class ZechemDBUtils:
             print(f"Error in ZechemDBUtils.mark_order_new: {e}")
             raise e
 
+    def mark_order_paid(self, order_id: str):
+        try:
+            table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
+            return self.db.update_one(table_name=table_name, query={"id": order_id}, new_data={"paid": True})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.mark_order_paid: {e}")
+            raise e
+
+    def mark_order_unpaid(self, order_id: str):
+        try:
+            table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
+            return self.db.update_one(table_name=table_name, query={"id": order_id}, new_data={"paid": False})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.mark_order_unpaid: {e}")
+            raise e
+
     def delete_order(self, order_id: str):
         try:
             table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
@@ -145,12 +178,20 @@ class ZechemDBUtils:
             print(f"Error in ZechemDBUtils.insert_new_order: {e}")
             raise e
 
-    def get_clients(self):
+    def get_clients(self, skip: int, limit: int):
         try:
             table_name = os.environ.get("CLIENTS_TABLE_NAME", "clients")
-            return self.db.find(table_name=table_name, query={})
+            return self.db.find(table_name=table_name, query={}, skip=skip, limit=limit)
         except Exception as e:
             print(f"Error in ZechemDBUtils.get_clients: {e}")
+            raise e
+
+    def count_clients(self):
+        try:
+            table_name = os.environ.get("CLIENTS_TABLE_NAME", "clients")
+            return self.db.count_documents(table_name=table_name, query={})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.count_clients: {e}")
             raise e
 
     def delete_client(self, client_id: str):

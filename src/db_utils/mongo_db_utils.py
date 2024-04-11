@@ -119,3 +119,10 @@ class MongoDBUtils(BaseDBUtils):
         except Exception as e:
             print(f"MongoDBUtils.delete_many failed. Here's why: {type(e).__name__} - {e}")
             raise e
+
+    def count_documents(self, table_name: str, query: dict):
+        try:
+            return self.db[table_name].count_documents(filter=query)
+        except Exception as e:
+            print(f"MongoDBUtils.count_documents failed. Here's why: {type(e).__name__} - {e}")
+            raise e

@@ -157,14 +157,18 @@ def delete_location(location_id):
 
 @app.route('/get_orders', methods=['GET'])
 def get_orders():
-    orders = orders_handler.get_orders()
-    return jsonify({'orders': orders}), 200
+    page = int(request.args.get('page'))
+    rows_per_page = int(request.args.get('rows_per_page'))
+    orders, count = orders_handler.get_orders(page=page, rows_per_page=rows_per_page)
+    return jsonify({'orders': orders, 'total': count}), 200
 
 
 @app.route('/get_new_orders', methods=['GET'])
 def get_new_orders():
-    orders = orders_handler.get_new_orders()
-    return jsonify({'orders': orders}), 200
+    page = int(request.args.get('page'))
+    rows_per_page = int(request.args.get('rows_per_page'))
+    orders, count = orders_handler.get_new_orders(page=page, rows_per_page=rows_per_page)
+    return jsonify({'orders': orders, 'total': count}), 200
 
 
 @app.route('/get_order/<string:order_id>', methods=['GET'])
@@ -191,6 +195,24 @@ def mark_order_new(order_id):
         return jsonify({'error': 'Order not found'}), 404
 
 
+@app.route('/mark_order_paid/<string:order_id>', methods=['POST'])
+def mark_order_paid(order_id):
+    try:
+        orders_handler.mark_order_paid(order_id=order_id)
+        return jsonify({'message': f'Order with ID {order_id} marked as paid'}), 200
+    except:
+        return jsonify({'error': 'Order not found'}), 404
+
+
+@app.route('/mark_order_unpaid/<string:order_id>', methods=['POST'])
+def mark_order_unpaid(order_id):
+    try:
+        orders_handler.mark_order_unpaid(order_id=order_id)
+        return jsonify({'message': f'Order with ID {order_id} marked as unpaid'}), 200
+    except:
+        return jsonify({'error': 'Order not found'}), 404
+
+
 @app.route('/delete_order/<string:order_id>', methods=['DELETE'])
 def delete_order(order_id):
     try:
@@ -213,8 +235,10 @@ def submit_order():
 
 @app.route('/get_clients', methods=['GET'])
 def get_clients():
-    clients = clients_handler.get_clients()
-    return jsonify({'clients': clients}), 200
+    page = int(request.args.get('page'))
+    rows_per_page = int(request.args.get('rows_per_page'))
+    clients, count = clients_handler.get_clients(page=page, rows_per_page=rows_per_page)
+    return jsonify({'clients': clients, 'total': count}), 200
 
 
 @app.route('/delete_client/<string:client_id>', methods=['DELETE'])
