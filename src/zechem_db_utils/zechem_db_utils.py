@@ -1,4 +1,5 @@
 import os
+import re
 
 from src.db_utils.get_db_instance import get_db_instance
 
@@ -178,18 +179,36 @@ class ZechemDBUtils:
             print(f"Error in ZechemDBUtils.insert_new_order: {e}")
             raise e
 
-    def get_clients(self, skip: int, limit: int):
+    def get_clients(self, skip: int, limit: int, search: str):
         try:
             table_name = os.environ.get("CLIENTS_TABLE_NAME", "clients")
-            return self.db.find(table_name=table_name, query={}, skip=skip, limit=limit)
+            # Construct regex pattern for the search term
+            regex_pattern = re.compile(f".*{search}.*", re.IGNORECASE)
+            # Construct query with regex filters for first_name and last_name
+            query = {
+                "$or": [
+                    {"first_name": {"$regex": regex_pattern}},
+                    {"last_name": {"$regex": regex_pattern}}
+                ]
+            }
+            return self.db.find(table_name=table_name, query=query, skip=skip, limit=limit)
         except Exception as e:
             print(f"Error in ZechemDBUtils.get_clients: {e}")
             raise e
 
-    def count_clients(self):
+    def count_clients(self, search: str):
         try:
             table_name = os.environ.get("CLIENTS_TABLE_NAME", "clients")
-            return self.db.count_documents(table_name=table_name, query={})
+            # Construct regex pattern for the search term
+            regex_pattern = re.compile(f".*{search}.*", re.IGNORECASE)
+            # Construct query with regex filters for first_name and last_name
+            query = {
+                "$or": [
+                    {"first_name": {"$regex": regex_pattern}},
+                    {"last_name": {"$regex": regex_pattern}}
+                ]
+            }
+            return self.db.count_documents(table_name=table_name, query=query)
         except Exception as e:
             print(f"Error in ZechemDBUtils.count_clients: {e}")
             raise e

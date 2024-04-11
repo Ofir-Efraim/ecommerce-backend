@@ -237,7 +237,8 @@ def submit_order():
 def get_clients():
     page = int(request.args.get('page'))
     rows_per_page = int(request.args.get('rows_per_page'))
-    clients, count = clients_handler.get_clients(page=page, rows_per_page=rows_per_page)
+    search = request.args.get('search')
+    clients, count = clients_handler.get_clients(page=page, rows_per_page=rows_per_page, search=search)
     return jsonify({'clients': clients, 'total': count}), 200
 
 
