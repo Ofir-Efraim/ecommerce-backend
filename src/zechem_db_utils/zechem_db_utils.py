@@ -90,37 +90,20 @@ class ZechemDBUtils:
             print(f"Error in ZechemDBUtils.delete_location: {e}")
             raise e
 
-    def get_orders(self, skip: int, limit: int):
+    def get_orders(self, skip: int, limit: int, query: dict):
         try:
             table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
-            return self.db.find(table_name=table_name, query={}, sort=[("date", -1)], skip=skip, limit=limit)
+            return self.db.find(table_name=table_name, query=query, sort=[("date", -1)], skip=skip, limit=limit)
         except Exception as e:
             print(f"Error in ZechemDBUtils.get_orders: {e}")
             raise e
 
-    def count_orders(self):
+    def count_orders(self, query: dict):
         try:
             table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
-            return self.db.count_documents(table_name=table_name, query={})
+            return self.db.count_documents(table_name=table_name, query=query)
         except Exception as e:
             print(f"Error in ZechemDBUtils.count_orders: {e}")
-            raise e
-
-    def get_new_orders(self, skip: int, limit: int):
-        try:
-            table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
-            return self.db.find(table_name=table_name, query={"status": "new"}, sort=[("date", -1)], skip=skip,
-                                limit=limit)
-        except Exception as e:
-            print(f"Error in ZechemDBUtils.get_new_orders: {e}")
-            raise e
-
-    def count_new_orders(self):
-        try:
-            table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
-            return self.db.count_documents(table_name=table_name, query={"status": "new"})
-        except Exception as e:
-            print(f"Error in ZechemDBUtils.count_new_orders: {e}")
             raise e
 
     def get_order(self, order_id: str):
@@ -236,3 +219,35 @@ class ZechemDBUtils:
         except Exception as e:
             print(f"Error in ZechemDBUtils.insert_new_client: {e}")
             raise e
+
+    def transform_query(self, query: dict, search: str) -> dict:
+        transformed_query = {}
+        regex_pattern = re.compile(f".*{search}.*", re.IGNORECASE)
+
+        # Construct query with regex filters for first_name and last_name
+        name_query = {
+            "$or": [
+                {"firstName": {"$regex": regex_pattern}},
+                {"lastName": {"$regex": regex_pattern}}
+            ]
+        }
+
+        # Add name_query to the transformed_query
+        transformed_query["$and"] = [name_query]
+
+        # Add existing query conditions
+        for key, value in query.items():
+            if isinstance(value, list):
+                transformed_list = []
+                for item in value:
+                    if isinstance(item, str) and item.lower() in ['true', 'false']:
+                        transformed_list.append(item.lower() == 'true')
+                    else:
+                        transformed_list.append(item)
+                transformed_query[key] = {"$in": transformed_list}
+            elif isinstance(value, str) and value.lower() in ['true', 'false']:
+                transformed_query[key] = value.lower() == 'true'
+            else:
+                transformed_query[key] = value
+
+        return transformed_query

@@ -159,15 +159,9 @@ def delete_location(location_id):
 def get_orders():
     page = int(request.args.get('page'))
     rows_per_page = int(request.args.get('rows_per_page'))
-    orders, count = orders_handler.get_orders(page=page, rows_per_page=rows_per_page)
-    return jsonify({'orders': orders, 'total': count}), 200
-
-
-@app.route('/get_new_orders', methods=['GET'])
-def get_new_orders():
-    page = int(request.args.get('page'))
-    rows_per_page = int(request.args.get('rows_per_page'))
-    orders, count = orders_handler.get_new_orders(page=page, rows_per_page=rows_per_page)
+    query = json.loads(request.args.get('query'))
+    search = request.args.get('search')
+    orders, count = orders_handler.get_orders(page=page, rows_per_page=rows_per_page, query=query, search=search)
     return jsonify({'orders': orders, 'total': count}), 200
 
 

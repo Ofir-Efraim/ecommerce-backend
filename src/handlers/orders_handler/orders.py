@@ -8,10 +8,11 @@ from src.handlers.base_handler import BaseHandler
 
 
 class Orders(BaseHandler):
-    def get_orders(self, page: int, rows_per_page: int) -> [list, int]:
+    def get_orders(self, page: int, rows_per_page: int, query: dict, search: str) -> [list, int]:
         skip = (page - 1) * rows_per_page
         limit = rows_per_page
-        data = self.db.get_orders(skip=skip, limit=limit)
+        transformed_query = self.db.transform_query(query=query, search=search)
+        data = self.db.get_orders(skip=skip, limit=limit, query=transformed_query)
         orders = []
         for order in data:
             # Convert timestamp to desired format
@@ -20,22 +21,7 @@ class Orders(BaseHandler):
             # Convert ObjectId to string
             order = {key: str(value) if isinstance(value, ObjectId) else value for key, value in order.items()}
             orders.append(order)
-        count = self.db.count_orders()
-        return orders, count
-
-    def get_new_orders(self, page: int, rows_per_page: int) -> [list, int]:
-        skip = (page - 1) * rows_per_page
-        limit = rows_per_page
-        data = self.db.get_new_orders(skip=skip, limit=limit)
-        orders = []
-        for order in data:
-            # Convert timestamp to desired format
-            order['date'] = datetime.fromtimestamp(timestamp=float(order['date']),
-                                                   tz=pytz.timezone('Asia/Tel_Aviv')).strftime('%H:%M - %d/%m/%Y')
-            # Convert ObjectId to string
-            order = {key: str(value) if isinstance(value, ObjectId) else value for key, value in order.items()}
-            orders.append(order)
-        count = self.db.count_new_orders()
+        count = self.db.count_orders(query=transformed_query)
         return orders, count
 
     def get_order(self, order_id: str) -> dict:

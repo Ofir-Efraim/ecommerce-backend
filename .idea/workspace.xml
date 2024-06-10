@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cffc64cf-3cbf-4ee4-b890-a1e6aa18361b" name="Changes" comment="add pagination to orders and clients and add option to mark order as paid or unpaid">
+    <list default="true" id="cffc64cf-3cbf-4ee4-b890-a1e6aa18361b" name="Changes" comment="add search for client page">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/handlers/clients_handler/clients.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/handlers/clients_handler/clients.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/web_server.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/web_server.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zechem_db_utils/zechem_db_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/zechem_db_utils/zechem_db_utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,13 +114,22 @@
       <option name="project" value="LOCAL" />
       <updated>1712824979252</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="add search for client page">
+      <option name="closed" value="true" />
+      <created>1712835057795</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1712835057795</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="sort orders by date, add date to order and to get orders response" />
     <MESSAGE value="add mark order new in case of user mistake" />
     <MESSAGE value="add pagination to orders and clients and add option to mark order as paid or unpaid" />
-    <option name="LAST_COMMIT_MESSAGE" value="add pagination to orders and clients and add option to mark order as paid or unpaid" />
+    <MESSAGE value="add search for client page" />
+    <option name="LAST_COMMIT_MESSAGE" value="add search for client page" />
   </component>
 </project>
