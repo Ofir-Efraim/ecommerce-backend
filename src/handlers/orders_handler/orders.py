@@ -40,6 +40,12 @@ class Orders(BaseHandler):
     def mark_order_new(self, order_id: str) -> None:
         self.db.mark_order_new(order_id=order_id)
 
+    def mark_order_bagged(self, order_id: str) -> None:
+        self.db.mark_order_bagged(order_id=order_id)
+
+    def mark_order_unbagged(self, order_id: str) -> None:
+        self.db.mark_order_unbagged(order_id=order_id)
+
     def mark_order_paid(self, order_id: str) -> None:
         self.db.mark_order_paid(order_id=order_id)
 

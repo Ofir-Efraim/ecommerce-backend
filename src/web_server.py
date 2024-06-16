@@ -189,6 +189,24 @@ def mark_order_new(order_id):
         return jsonify({'error': 'Order not found'}), 404
 
 
+@app.route('/mark_order_bagged/<string:order_id>', methods=['POST'])
+def mark_order_bagged(order_id):
+    try:
+        orders_handler.mark_order_bagged(order_id=order_id)
+        return jsonify({'message': f'Order with ID {order_id} marked as bagged'}), 200
+    except:
+        return jsonify({'error': 'Order not found'}), 404
+
+
+@app.route('/mark_order_unbagged/<string:order_id>', methods=['POST'])
+def mark_order_unbagged(order_id):
+    try:
+        orders_handler.mark_order_unbagged(order_id=order_id)
+        return jsonify({'message': f'Order with ID {order_id} marked as unbagged'}), 200
+    except:
+        return jsonify({'error': 'Order not found'}), 404
+
+
 @app.route('/mark_order_paid/<string:order_id>', methods=['POST'])
 def mark_order_paid(order_id):
     try:

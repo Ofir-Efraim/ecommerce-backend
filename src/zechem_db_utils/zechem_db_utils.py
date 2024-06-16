@@ -130,6 +130,22 @@ class ZechemDBUtils:
             print(f"Error in ZechemDBUtils.mark_order_new: {e}")
             raise e
 
+    def mark_order_bagged(self, order_id: str):
+        try:
+            table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
+            return self.db.update_one(table_name=table_name, query={"id": order_id}, new_data={"bagged": True})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.mark_order_bagged: {e}")
+            raise e
+
+    def mark_order_unbagged(self, order_id: str):
+        try:
+            table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
+            return self.db.update_one(table_name=table_name, query={"id": order_id}, new_data={"bagged": False})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.mark_order_unbagged: {e}")
+            raise e
+
     def mark_order_paid(self, order_id: str):
         try:
             table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
