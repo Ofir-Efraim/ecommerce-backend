@@ -22,7 +22,8 @@ class Orders(BaseHandler):
             order = {key: str(value) if isinstance(value, ObjectId) else value for key, value in order.items()}
             orders.append(order)
         count = self.db.count_orders(query=transformed_query)
-        return orders, count
+        sum_price = self.db.sum_orders(query=transformed_query)
+        return orders, count, sum_price
 
     def get_order(self, order_id: str) -> dict:
         order = self.db.get_order(order_id=order_id)

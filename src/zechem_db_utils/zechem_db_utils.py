@@ -106,6 +106,27 @@ class ZechemDBUtils:
             print(f"Error in ZechemDBUtils.count_orders: {e}")
             raise e
 
+    def sum_orders(self,query: dict):
+        try:
+            table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
+            pipeline = [
+                {"$match": query},  # Match documents based on the query
+                {"$group": {
+                    "_id": None,  # Group all documents into one group
+                    "total_sum": {"$sum": "$totalPrice"}  # Sum the totalPrice field
+                }}
+            ]
+
+            results = list(self.db.aggregate(table_name=table_name, pipeline=pipeline))
+            if results:
+                return results[0]['total_sum']  # Return the sum of totalPrice
+            else:
+                return 0  # Return 0 if no documents match the query
+
+        except Exception as e:
+            print(f"MongoDBUtils.sum_orders failed. Here's why: {type(e).__name__} - {e}")
+            raise e
+
     def get_order(self, order_id: str):
         try:
             table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")

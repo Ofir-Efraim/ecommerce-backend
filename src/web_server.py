@@ -161,8 +161,9 @@ def get_orders():
     rows_per_page = int(request.args.get('rows_per_page'))
     query = json.loads(request.args.get('query'))
     search = request.args.get('search')
-    orders, count = orders_handler.get_orders(page=page, rows_per_page=rows_per_page, query=query, search=search)
-    return jsonify({'orders': orders, 'total': count}), 200
+    orders, count, sum_price = orders_handler.get_orders(page=page, rows_per_page=rows_per_page, query=query,
+                                                         search=search)
+    return jsonify({'orders': orders, 'total': count, "sum_price": sum_price}), 200
 
 
 @app.route('/get_order/<string:order_id>', methods=['GET'])
