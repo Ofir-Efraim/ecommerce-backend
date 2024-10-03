@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cffc64cf-3cbf-4ee4-b890-a1e6aa18361b" name="Changes" comment="add search for client page">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/handlers/coupon_codes_handler/coupon_codes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/zechem_backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/zechem_backend.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/handlers/orders_handler/orders.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/handlers/orders_handler/orders.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/web_server.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/web_server.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/zechem_db_utils/zechem_db_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/zechem_db_utils/zechem_db_utils.py" afterDir="false" />
     </list>
@@ -31,22 +29,24 @@
   &quot;associatedIndex&quot;: 4
 }</component>
   <component name="ProjectId" id="2cOMIeWSaFJ5ApSLjxFMjf8hrtg" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.web_server.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;app.teamhub.trackedBranches&quot;: &quot;&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/ofir/PycharmProjects/ecommerce-backend&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.web_server.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "app.teamhub.trackedBranches": "-o37sc3/main",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/ofir/PycharmProjects/ecommerce-backend",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ofire\PycharmProjects\zechem_backend\src\zechem_db_utils" />
@@ -82,7 +82,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-50da183f06c8-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.13135.95" />
+        <option value="bundled-python-sdk-5a2391486177-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.13763.11" />
       </set>
     </attachedChunks>
   </component>

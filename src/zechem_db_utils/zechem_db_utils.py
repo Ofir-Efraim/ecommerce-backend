@@ -106,7 +106,7 @@ class ZechemDBUtils:
             print(f"Error in ZechemDBUtils.count_orders: {e}")
             raise e
 
-    def sum_orders(self,query: dict):
+    def sum_orders(self, query: dict):
         try:
             table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
             pipeline = [
@@ -255,6 +255,55 @@ class ZechemDBUtils:
             return self.db.insert_one(table_name=table_name, document=client_data)
         except Exception as e:
             print(f"Error in ZechemDBUtils.insert_new_client: {e}")
+            raise e
+
+    def get_coupon_codes(self):
+        try:
+            table_name = os.environ.get("COUPON_CODES_TABLE_NAME", "couponCodes")
+            return self.db.find(table_name=table_name, query={})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.get_coupon_codes: {e}")
+            raise e
+
+    def insert_new_coupon_code(self, coupon_code_data: dict):
+        try:
+            table_name = os.environ.get("COUPON_CODES_TABLE_NAME", "couponCodes")
+            return self.db.insert_one(table_name=table_name, document=coupon_code_data)
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.insert_new_coupon_code: {e}")
+            raise e
+
+    def delete_coupon_code(self, coupon_code_id: str):
+        try:
+            table_name = os.environ.get("COUPON_CODES_TABLE_NAME", "couponCodes")
+            return self.db.delete_one(table_name=table_name, query={"id": coupon_code_id})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.delete_coupon_code: {e}")
+            raise e
+
+    def get_coupon_code_by_id(self, coupon_code_id: str):
+        try:
+            table_name = os.environ.get("COUPON_CODES_TABLE_NAME", "couponCodes")
+            return self.db.find_one(table_name=table_name, query={"id": coupon_code_id})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.get_coupon_code_by_id: {e}")
+            raise e
+
+    def toggle_coupon_code_active(self, coupon_code_id: str, active: bool):
+        try:
+            table_name = os.environ.get("COUPON_CODES_TABLE_NAME", "couponCodes")
+            coupon_code_data = {"active": active}  # Constructing the data to update
+            return self.db.update_one(table_name=table_name, query={"id": coupon_code_id}, new_data=coupon_code_data)
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.toggle_coupon_code_active: {e}")
+            raise e
+
+    def get_coupon_code_by_code(self, coupon_code: str):
+        try:
+            table_name = os.environ.get("COUPON_CODES_TABLE_NAME", "couponCodes")
+            return self.db.find_one(table_name=table_name, query={"coupon_code": coupon_code})
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.get_coupon_code_by_code: {e}")
             raise e
 
     def transform_query(self, query: dict, search: str) -> dict:

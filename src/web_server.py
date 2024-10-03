@@ -7,6 +7,7 @@ from src.handlers.products_handler.products import Products
 from src.handlers.locations_handler.locations import Locations
 from src.handlers.orders_handler.orders import Orders
 from src.handlers.clients_handler.clients import Clients
+from src.handlers.coupon_codes_handler.coupon_codes import CouponCodes
 
 app = Flask(__name__)
 CORS(app)
@@ -15,6 +16,7 @@ products_handler = Products()
 locations_handler = Locations()
 orders_handler = Orders()
 clients_handler = Clients()
+coupon_codes_handler = CouponCodes()
 
 
 @app.route('/get_products', methods=['GET'])
@@ -262,6 +264,50 @@ def delete_client(client_id):
         return jsonify({'message': f'Client with ID {client_id} deleted successfully'}), 200
     except:
         return jsonify({'error': 'Client not found'}), 404
+
+
+@app.route('/get_coupon_codes', methods=['GET'])
+def get_coupon_codes():
+    coupon_codes = coupon_codes_handler.get_coupon_codes()
+    return jsonify({'coupon_codes': coupon_codes}), 200
+
+
+@app.route('/add_coupon_code', methods=['POST'])
+def add_coupon_code():
+    data = request.json
+    coupon_code = data.get('coupon_code')
+    if coupon_code:
+        coupon_codes_handler.add_coupon_code(coupon_code=coupon_code)
+        return jsonify({'message': 'Coupon Code added successfully'}), 201
+    else:
+        return jsonify({'error': 'Missing coupon_code parameter'}), 400
+
+
+@app.route('/delete_coupon_code/<string:coupon_code_id>', methods=['DELETE'])
+def delete_coupon_code(coupon_code_id):
+    try:
+        coupon_codes_handler.delete_coupon_code(coupon_code_id=coupon_code_id)
+        return jsonify({'message': f'Coupon Code with ID {coupon_code_id} deleted successfully'}), 200
+    except:
+        return jsonify({'error': 'Coupon Code not found'}), 404
+
+
+@app.route('/toggle_coupon_code_active/<string:coupon_code_id>', methods=['POST'])
+def toggle_coupon_code_active(coupon_code_id):
+    try:
+        coupon_codes_handler.toggle_coupon_code_active(coupon_code_id=coupon_code_id)
+        return jsonify({'message': 'Coupon Code toggle successful'}), 200
+    except:
+        return jsonify({'message': 'Coupon Code not found'}), 404
+
+
+@app.route('/is_coupon_code_valid', methods=['POST'])
+def is_coupon_code_valid():
+    data = request.json
+    coupon_code = data.get('coupon_code')
+    is_valid = coupon_codes_handler.is_coupon_code_valid(coupon_code=coupon_code)
+
+    return jsonify({'is_coupon_code_valid': is_valid}), 200
 
 
 def lambda_handler(event, context):
