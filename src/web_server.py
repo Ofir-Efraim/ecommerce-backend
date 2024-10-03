@@ -276,11 +276,12 @@ def get_coupon_codes():
 def add_coupon_code():
     data = request.json
     coupon_code = data.get('coupon_code')
-    if coupon_code:
-        coupon_codes_handler.add_coupon_code(coupon_code=coupon_code)
+    discount_percentage = data.get('discount_percentage')
+    if coupon_code and discount_percentage:
+        coupon_codes_handler.add_coupon_code(coupon_code=coupon_code, discount_percentage=discount_percentage)
         return jsonify({'message': 'Coupon Code added successfully'}), 201
     else:
-        return jsonify({'error': 'Missing coupon_code parameter'}), 400
+        return jsonify({'error': 'Missing coupon_code or discount_percentage parameter'}), 400
 
 
 @app.route('/delete_coupon_code/<string:coupon_code_id>', methods=['DELETE'])
@@ -305,9 +306,11 @@ def toggle_coupon_code_active(coupon_code_id):
 def is_coupon_code_valid():
     data = request.json
     coupon_code = data.get('coupon_code')
-    is_valid = coupon_codes_handler.is_coupon_code_valid(coupon_code=coupon_code)
-
-    return jsonify({'is_coupon_code_valid': is_valid}), 200
+    discount_percentage = coupon_codes_handler.is_coupon_code_valid(coupon_code=coupon_code)
+    if discount_percentage:
+        return jsonify({'is_coupon_code_valid': True, "discount_percentage": discount_percentage}), 200
+    else:
+        return jsonify({'is_coupon_code_valid': False, "discount_percentage": 0}), 200
 
 
 def lambda_handler(event, context):

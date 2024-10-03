@@ -13,9 +13,10 @@ class CouponCodes(BaseHandler):
             coupon_code in data]
         return coupon_codes
 
-    def add_coupon_code(self, coupon_code: str) -> None:
+    def add_coupon_code(self, coupon_code: str, discount_percentage: int) -> None:
         coupon_code = {
             "coupon_code": coupon_code,
+            discount_percentage: discount_percentage,
             "id": str(uuid4()),
             "active": True,
         }
@@ -32,8 +33,8 @@ class CouponCodes(BaseHandler):
             active = True
         self.db.toggle_coupon_code_active(coupon_code_id=coupon_code_id, active=active)
 
-    def is_coupon_code_valid(self, coupon_code: str) -> bool:
+    def is_coupon_code_valid(self, coupon_code: str) -> int or None:
         coupon_code = self.db.get_coupon_code_by_code(coupon_code=coupon_code)
         if coupon_code and coupon_code['active']:
-            return True
-        return False
+            return coupon_code['discount_percentage']
+        return None
