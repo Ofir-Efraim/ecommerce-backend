@@ -16,7 +16,7 @@ class CouponCodes(BaseHandler):
     def add_coupon_code(self, coupon_code: str, discount_percentage: int) -> None:
         coupon_code = {
             "coupon_code": coupon_code,
-            discount_percentage: discount_percentage,
+            "discount_percentage": discount_percentage,
             "id": str(uuid4()),
             "active": True,
         }
