@@ -67,6 +67,14 @@ class Orders(BaseHandler):
         order['date'] = order_date
         self.db.insert_new_order(order_data=order)
 
+        for item in order['products']:
+            product = self.db.get_product(product_id=item['id'])
+            current_quantity = int(product['quantity'])
+            ordered_quantity = int(item['quantity'])
+            new_quantity = current_quantity - ordered_quantity
+            product['quantity'] = str(new_quantity)
+            self.db.update_product(product_id=item['id'], product_data=product)
+
         existing_customer = self.db.get_client(phone_number=order['phoneNumber'])
 
         if not existing_customer:

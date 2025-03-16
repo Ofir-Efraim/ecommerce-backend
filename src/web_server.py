@@ -106,6 +106,7 @@ def edit_product():
         price = request.form.get('price')
         product_id = request.form.get('product_id')
         active = bool(request.form.get('active'))
+        quantity = request.form.get('quantity')
 
         nutritional_values_json = request.form.get('nutritionalValues')
 
@@ -120,13 +121,14 @@ def edit_product():
             'picture': picture,
             'active': active,
             'nutritionalValues': nutritional_values,
-            'id': product_id
+            'id': product_id,
+            'quantity': quantity
         }
 
         # Handle the product using your products_handler module
         products_handler.edit_product(product=product, picture_change=picture_change)
 
-        return jsonify({'message': 'Product added successfully'}), 201
+        return jsonify({'message': 'Product edited successfully'}), 201
     except:
         return jsonify({'error': 'Invalid request'}), 400
 
