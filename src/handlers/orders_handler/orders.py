@@ -95,12 +95,18 @@ class Orders(BaseHandler):
         else:
             phone_message = ""
 
-        # Generate items summary as an unordered list with RTL direction
+        # Generate items summary
         items_summary = ""
         for item in order['products']:
             items_summary += f"<p style='direction: rtl; text-align: right;'>{item['name']} כמות - {item['quantity']}</p>"
 
-        # Determine location message and value
+        # Payment links - only show for client emails
+        payment_links = """
+            <p style='direction: rtl; text-align: right;'>לינק לתשלום בפייבוקס : <a href="https://payboxapp.page.link/sRTLTxrerr2btZjs9">לחץ כאן</a></p>
+            <p style='direction: rtl; text-align: right;'>לינק לתשלום בביט : <a href="https://www.bitpay.co.il/app/me/A3F1EF64-310A-BF72-D7AD-FAC8BF9649E6E77C">לחץ כאן</a></p>
+        """ if is_client else ""
+
+        # Determine location
         if 'pickupSpot' in order:
             location_message = "מקום איסוף"
             location_value = order['pickupSpot']
@@ -108,33 +114,33 @@ class Orders(BaseHandler):
             location_message = "כתובת משלוח"
             location_value = order['address']
 
-        # Construct HTML-formatted order summary
-        order_summary = f"""<html>
-    <head>
-        <style>
-            body {{
-                direction: rtl;
-                text-align: right;
-            }}
-        </style>
-    </head>
-    <body>
-        <p style='direction: rtl; text-align: right;'>שלום {order['firstName']} {order['lastName']},</p>
+        return f"""<html>
+        <head>
+            <style>
+                body {{
+                    direction: rtl;
+                    text-align: right;
+                }}
+            </style>
+        </head>
+        <body>
+            <p style='direction: rtl; text-align: right;'>שלום {order['firstName']} {order['lastName']},</p>
 
-        <p style='direction: rtl; text-align: right;'>הזמנתך נקלטה בצחם:</p>
+            <p style='direction: rtl; text-align: right;'>הזמנתך נקלטה בצחם:</p>
 
-        {items_summary}
+            {items_summary}
 
-        <p style='direction: rtl; text-align: right;'>על סך: {order['totalPrice']} ש"ח</p>
+            <p style='direction: rtl; text-align: right;'>על סך: {order['totalPrice']} ש"ח</p>
 
-        <p style='direction: rtl; text-align: right;'>{location_message}: {location_value}</p>
+            {payment_links}
 
-        {phone_message}
+            <p style='direction: rtl; text-align: right;'>{location_message}: {location_value}</p>
 
-        <p style='direction: rtl; text-align: right;'>בברכה,</p>
+            {phone_message}
 
-        <p style='direction: rtl; text-align: right;'>צחם-לחם בריאות מצמחים</p>
-        <img src='cid:logo' alt='logo'/>
-    </body>
-    </html>"""
-        return order_summary
+            <p style='direction: rtl; text-align: right;'>בברכה,</p>
+
+            <p style='direction: rtl; text-align: right;'>צחם-לחם בריאות מצמחים</p>
+            <img src='cid:logo' alt='logo'/>
+        </body>
+        </html>"""
