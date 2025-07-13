@@ -33,6 +33,17 @@ class Orders(BaseHandler):
         return order
 
     def delete_order(self, order_id: str) -> None:
+
+        order = self.db.get_order(order_id=order_id)
+
+        for item in order['products']:
+            product = self.db.get_product(product_id=item['id'])
+            current_quantity = int(product['quantity'])
+            ordered_quantity = int(item['quantity'])
+            new_quantity = current_quantity + ordered_quantity  # Add back the quantity
+            product['quantity'] = str(new_quantity)
+            self.db.update_product(product_id=item['id'], product_data=product)
+
         self.db.delete_order(order_id=order_id)
 
     def mark_order_delivered(self, order_id: str) -> None:
