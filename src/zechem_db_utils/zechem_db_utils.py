@@ -191,6 +191,14 @@ class ZechemDBUtils:
             print(f"Error in ZechemDBUtils.delete_order: {e}")
             raise e
 
+    def get_all_orders(self):
+        try:
+            table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")
+            return self.db.find(table_name=table_name, query={}, sort=[("date", -1)])
+        except Exception as e:
+            print(f"Error in ZechemDBUtils.get_all_orders: {e}")
+            raise e
+        
     def insert_new_order(self, order_data: dict):
         try:
             table_name = os.environ.get("ORDERS_TABLE_NAME", "orders")

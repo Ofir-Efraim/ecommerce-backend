@@ -64,6 +64,18 @@ class Orders(BaseHandler):
     def mark_order_unpaid(self, order_id: str) -> None:
         self.db.mark_order_unpaid(order_id=order_id)
 
+    def get_all_orders(self) -> list:
+        data = self.db.get_all_orders()
+        orders = []
+        for order in data:
+            # Convert timestamp to desired format
+            order['date'] = datetime.fromtimestamp(timestamp=float(order['date']),
+                                                   tz=pytz.timezone('Asia/Tel_Aviv')).strftime('%H:%M - %d/%m/%Y')
+            # Convert ObjectId to string
+            order = {key: str(value) if isinstance(value, ObjectId) else value for key, value in order.items()}
+            orders.append(order)
+        return orders
+
     def add_order(self, order: dict) -> str:
         customer_email = order.get('email')
         if customer_email:

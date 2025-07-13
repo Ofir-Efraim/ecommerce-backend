@@ -11,6 +11,8 @@ boto3 = "*"
 aws-wsgi = "*"
 pytz = "*"
 mailtrap = "*"
+pandas = "*"
+xlsxwriter = "*"
 
 [dev-packages]
 

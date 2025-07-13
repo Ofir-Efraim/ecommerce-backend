@@ -1,7 +1,9 @@
 import json
 import awsgi
+import pandas as pd
+from io import BytesIO
 from botocore.exceptions import ClientError
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 from src.handlers.products_handler.products import Products
 from src.handlers.locations_handler.locations import Locations
@@ -238,6 +240,32 @@ def delete_order(order_id):
     except:
         return jsonify({'error': 'Order not found'}), 404
 
+
+@app.route('/export_orders', methods=['GET'])
+def export_orders():
+    try:
+        # Get all orders
+        orders = orders_handler.get_all_orders()
+
+        # Convert to DataFrame
+        df = pd.DataFrame(orders)
+
+        # Create Excel file in memory
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False, sheet_name='Orders')
+
+        output.seek(0)
+
+        # Return the Excel file
+        return send_file(
+            output,
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            as_attachment=True,
+            download_name='orders.xlsx'
+        )
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/submit_order', methods=['POST'])
 def submit_order():
