@@ -344,7 +344,15 @@ def is_coupon_code_valid():
 
 
 def lambda_handler(event, context):
-    return awsgi.response(app, event, context, base64_content_types={"image/png", "image/jpg", "image/jpeg"})
+    return awsgi.response(
+        app, event, context,
+        base64_content_types={
+            "image/png",
+            "image/jpg",
+            "image/jpeg",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }
+    )
 
 
 if __name__ == '__main__':
