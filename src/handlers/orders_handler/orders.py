@@ -125,7 +125,7 @@ class Orders(BaseHandler):
 
         # Payment links - only show for client emails
         payment_links = """
-            <p style='direction: rtl; text-align: right;'>לינק לתשלום בפייבוקס : <a href="https://links.payboxapp.com/G2TeFvil0Ub">לחץ כאן</a></p>
+            <p style='direction: rtl; text-align: right;'>לינק לתשלום בפייבוקס : <a href="https://payboxapp.page.link/rwr5VSbhSFrx534y7">לחץ כאן</a></p>
         """ if is_client else ""
         # <p style='direction: rtl; text-align: right;'>לינק לתשלום בביט : <a href="https://www.bitpay.co.il/app/me/A3F1EF64-310A-BF72-D7AD-FAC8BF9649E6E77C">לחץ כאן</a></p>
         # Determine location
